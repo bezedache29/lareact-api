@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RegisterAuthRequest;
-use App\Http\Validation\RegisterValidation;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Validation\LoginValidation;
+use App\Http\Validation\RegisterValidation;
 
 class AuthentificationController extends Controller
 {
@@ -18,7 +19,7 @@ class AuthentificationController extends Controller
         $data = Validator::make($request->all(), $validation->rules(), $validation->messages());
 
         if ($data->fails()) {
-            return response()->json(['errors' => $data->errors()]);
+            return response()->json(['error' => $data->errors()]);
         }
 
         $user = User::create([
@@ -29,5 +30,25 @@ class AuthentificationController extends Controller
         ]);
 
         return response()->json($user);
+    }
+
+    public function login(Request $request, LoginValidation $validation)
+    {
+        $data = Validator::make($request->all(), $validation->rules(), $validation->messages());
+
+        if ($data->fails()) {
+            return response()->json(['error' => $data->errors()]);
+        }
+
+        // Permet de check l'email et le password avec hashage du user en DB est valide
+        if (Auth::attempt(['email' => $request->email,'password' => $request->password])) {
+
+            $user = User::where('email', $request->email)->firstOrFail();
+
+            return response()->json($user);
+
+        } else {
+            return response()->json(['error' => 'Email ou Mot de passe invalide']);
+        }
     }
 }
