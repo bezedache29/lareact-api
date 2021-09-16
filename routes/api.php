@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthentificationController;
 use App\Http\Controllers\PictureController;
+use App\Http\Middleware\CreateImg;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('/pictures', PictureController::class);
+Route::resource('/pictures', PictureController::class)->middleware(CreateImg::class)->except('create', 'edit');
 
 Route::post('/register', [AuthentificationController::class, 'register']);
 Route::post('/login', [AuthentificationController::class, 'login']);

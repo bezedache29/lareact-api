@@ -12,6 +12,19 @@ class Picture extends Model
 
     protected $fillable = ['title', 'description', 'image'];
 
+    protected $with = ['user'];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        // Pendant la création d'une image
+        // On associe a l'image le user_id
+        self::creating(function ($picture) {
+            $picture->user()->associate(auth()->user()->id);
+        });
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

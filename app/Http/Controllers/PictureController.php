@@ -14,19 +14,9 @@ class PictureController extends Controller
      */
     public function index()
     {
-        $pictures = Picture::with('user')->get();
+        $pictures = Picture::all();
 
         return response()->json($pictures);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -37,7 +27,21 @@ class PictureController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // On renomme l'image
+        $imageName = time() . '-' . rand(10, 100) . '.' . $request->image->extension();
+        // On la stcok dans le dossier pictures sur le disk public
+        $path = $request->image->storeAs('pictures', $imageName, 'public');
+
+        $picture = Picture::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'image' => $path
+        ]);
+
+        // On récupère le user_id dans le middleware CreateImg, et on l'insere dans Picture via boot() du Model Picture
+        // Cela évite d'ajouter user_id en fillable dans Picture
+
+        return response()->json($picture);
     }
 
     /**
@@ -47,17 +51,6 @@ class PictureController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Picture $picture)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Picture  $picture
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Picture $picture)
     {
         //
     }
