@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterAuthRequest;
+use App\Http\Validation\RegisterValidation;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -11,22 +12,13 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthentificationController extends Controller
 {
-    public function register(Request $request)
+    public function register(Request $request, RegisterValidation $validation)
     {
-        $validator = Validator::make($request->all(), [
-            'pseudo' => 'required|min:3|max:20',
-            'email' => 'required|email|unique:App\Models\User,email',
-            'password' => 'required|confirmed|min:6',
-        ],
-        [
-            'pseudo.required' => 'Le pseudo est obligatoire',
-            'email.required' => 'Adresse email est obligatoire',
-            'password.required' => 'Les mots de passe sont obligatoire',
-            'password.confirmed' => 'Les mots de passe ne correspondent pas'
-        ]);
+        // On passe le tableau des requetes du formulaire + le tableau des règles de validation + le tableau des messages d'erreur custom
+        $data = Validator::make($request->all(), $validation->rules(), $validation->messages());
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->all());
+        if ($data->fails()) {
+            return response()->json(['errors' => $data->errors()]);
         }
 
         $user = User::create([
