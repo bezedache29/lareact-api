@@ -13,13 +13,14 @@ use App\Http\Validation\RegisterValidation;
 
 class AuthentificationController extends Controller
 {
+    // Pour enregistrer un user
     public function register(Request $request, RegisterValidation $validation)
     {
         // On passe le tableau des requetes du formulaire + le tableau des règles de validation + le tableau des messages d'erreur custom
         $data = Validator::make($request->all(), $validation->rules(), $validation->messages());
 
         if ($data->fails()) {
-            return response()->json(['error' => $data->errors()]);
+            return response()->json(['errors' => $data->errors()], 401);
         }
 
         $user = User::create([
@@ -32,12 +33,13 @@ class AuthentificationController extends Controller
         return response()->json($user);
     }
 
+    // Pour connecter un user
     public function login(Request $request, LoginValidation $validation)
     {
         $data = Validator::make($request->all(), $validation->rules(), $validation->messages());
 
         if ($data->fails()) {
-            return response()->json(['error' => $data->errors()]);
+            return response()->json(['errors' => $data->errors()], 401);
         }
 
         // Permet de check l'email et le password avec hashage du user en DB est valide
@@ -48,7 +50,11 @@ class AuthentificationController extends Controller
             return response()->json($user);
 
         } else {
-            return response()->json(['error' => 'Email ou Mot de passe invalide']);
+            return response()->json([
+                'errors' => [
+                    'bad_credentials' => 'Email et/ou Mot de passe invalide'
+                ]
+            ], 401);
         }
     }
 }
