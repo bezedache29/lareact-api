@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Validation\PictureValidation;
 use App\Models\Picture;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PictureController extends Controller
 {
@@ -25,8 +27,14 @@ class PictureController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, PictureValidation $validation)
     {
+        $data = Validator::make($request->all(), $validation->rules(), $validation->messages());
+
+        if ($data->fails()) {
+            return response()->json(['errors' => $data->errors()], 401);
+        }
+
         // On renomme l'image
         $imageName = time() . '-' . rand(10, 100) . '.' . $request->image->extension();
         // On la stcok dans le dossier pictures sur le disk public
