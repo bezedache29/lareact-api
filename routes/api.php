@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthentificationController;
+use App\Http\Controllers\PictureController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::resource('/pictures', PictureController::class);
 
 Route::post('/register', [AuthentificationController::class, 'register']);
 Route::post('/login', [AuthentificationController::class, 'login']);
