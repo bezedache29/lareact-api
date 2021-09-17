@@ -17,7 +17,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('/pictures', PictureController::class)->middleware(CreateImg::class)->except('create', 'edit');
-
+// Auth
 Route::post('/register', [AuthentificationController::class, 'register']);
 Route::post('/login', [AuthentificationController::class, 'login']);
+
+// Photos
+Route::resource('/pictures', PictureController::class)->only('index', 'show');
+Route::resource('/pictures', PictureController::class)->middleware(CreateImg::class)->only('store', 'update', 'delete');

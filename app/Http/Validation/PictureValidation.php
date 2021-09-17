@@ -9,7 +9,7 @@ class PictureValidation
     {
         return [
             'title' => 'required|string|min:10',
-            'description' => 'required|string',
+            'description' => 'required|string|max:250',
             'image' => 'required|image'
         ];
     }
@@ -21,6 +21,7 @@ class PictureValidation
             'title.required' => 'Le titre est obligatoire',
             'title.min' => 'Le titre est trop court',
             'description.required' => 'La description est obligatoire',
+            'description.max' => '250 caratcères maximum',
             'image.required' => 'L\'image est obligatoire',
             'image.image' => 'L\'image n\'est pas au bon format'
         ];
