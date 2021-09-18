@@ -105,4 +105,28 @@ class PictureController extends Controller
 
         return response()->json($pictures);
     }
+
+    public function checkLike(Picture $picture)
+    {
+        // On check si le user est connecté
+        if (auth()->user()) {
+            // On récupères les users ayant liké l'article
+            $likes = $picture->with('usersLiked')->get();
+
+            // On check si le user connecté a deja liké l'article
+            foreach ($likes as $like) {
+                foreach ($like->usersLiked as $userLiked) {
+                    if ($userLiked->id == auth()->user()->id) {
+                        return response()->json(true, 200);
+                    } else {
+                        return response()->json(false, 200);
+                    }
+                }
+            }
+        }
+
+        return response()->json('euh');
+
+        
+    }
 }

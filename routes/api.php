@@ -25,3 +25,6 @@ Route::post('/login', [AuthentificationController::class, 'login']);
 Route::get('/pictures', [PictureController::class, 'index']);
 Route::resource('/pictures', PictureController::class)->middleware(CreateImg::class)->except('index', 'create', 'edit');
 Route::post('/pictures/search', [PictureController::class, 'search']);
+
+// 
+Route::get('/pictures/{picture}/checklike', [PictureController::class, 'checkLike'])->middleware(CreateImg::class);
