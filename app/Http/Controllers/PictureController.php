@@ -15,7 +15,7 @@ class PictureController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    {   
         $pictures = Picture::all();
 
         return response()->json($pictures);
@@ -88,5 +88,14 @@ class PictureController extends Controller
     public function destroy(Picture $picture)
     {
         //
+    }
+
+    public function search(Request $request)
+    {
+        $pictures = Picture::where('title', 'like', '%' . $request->search . '%')
+                            ->orWhere('description', 'like', '%' . $request->search . '%')
+                            ->get();
+
+        return response()->json($pictures);
     }
 }

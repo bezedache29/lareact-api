@@ -25,6 +25,11 @@ class Picture extends Model
         });
     }
 
+    public function search(String $search)
+    {
+        return $this->where('title', 'like', '%' . $search . '%');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
