@@ -22,5 +22,5 @@ Route::post('/register', [AuthentificationController::class, 'register']);
 Route::post('/login', [AuthentificationController::class, 'login']);
 
 // Photos
-Route::resource('/pictures', PictureController::class)->only('index', 'show');
-Route::resource('/pictures', PictureController::class)->middleware(CreateImg::class)->only('store', 'update', 'delete');
+Route::resource('/pictures', PictureController::class)->only('index');
+Route::resource('/pictures', PictureController::class)->middleware(CreateImg::class)->except('index');

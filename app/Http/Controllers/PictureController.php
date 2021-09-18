@@ -60,7 +60,11 @@ class PictureController extends Controller
      */
     public function show(Picture $picture)
     {
-        //
+        if (!$picture) {
+            return response()->json(['errors' => 'Photo introuvable']);
+        }
+
+        return response()->json($picture);
     }
 
     /**

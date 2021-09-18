@@ -24,7 +24,7 @@ class PictureFactory extends Factory
         return [
             'title' => $this->faker->sentence(rand(5, 10), true),
             'description' => $this->faker->sentences(rand(20, 45), true),
-            'image' => 'pictures/images.jpg'
+            'image' => 'pictures/1631831499-56.jpg'
         ];
     }
 }
