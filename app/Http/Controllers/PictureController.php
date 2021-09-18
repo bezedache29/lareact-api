@@ -138,4 +138,31 @@ class PictureController extends Controller
 
         return response()->json(['success' => 'Article liké !']);
     }
+
+    public function likedArticles()
+    {
+        $pictures = Picture::whereRelation('usersLiked', 'user_id', auth()->user()->id)->get();
+
+        // $pictures = Picture::whereHas('usersLiked', function ($query) {
+        //     $query->where('user_id', 6);
+        // })->get();
+
+        return response()->json($pictures);
+    }
+
+    public function SearchLikedArticles(Request $request, SearchValidation $validation)
+    {
+        $data = Validator::make($request->all(), $validation->rules(), $validation->messages());
+
+        if ($data->fails()) {
+            return response()->json(['errors' => $data->errors()], 401);
+        }
+
+        $pictures = Picture::where('title', 'like', '%' . $request->search . '%')
+                                ->orWhere('description', 'like', '%' . $request->search . '%')
+                                ->whereRelation('usersLiked', 'user_id', auth()->user()->id)
+                                ->get();
+
+        return response()->json($pictures);
+    }
 }
