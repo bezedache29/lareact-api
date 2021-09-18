@@ -121,4 +121,21 @@ class PictureController extends Controller
 
         }
     }
+
+    public function handleLike(Picture $picture)
+    {
+        $like = Like::where('user_id', auth()->user()->id)->where('picture_id', $picture->id)->first();
+
+        if ($like) {
+            $like->delete();
+            return response()->json(['success' => 'Article unliké !']);
+        }
+
+        Like::create([
+            'picture_id' => $picture->id,
+            'user_id' => auth()->user()->id
+        ]);
+
+        return response()->json(['success' => 'Article liké !']);
+    }
 }

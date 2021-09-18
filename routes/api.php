@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\AuthentificationController;
-use App\Http\Controllers\PictureController;
-use App\Http\Middleware\CreateImg;
 use Illuminate\Http\Request;
+use App\Http\Middleware\ApiToken;
+use App\Http\Middleware\CreateImg;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PictureController;
+use App\Http\Controllers\AuthentificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,8 +24,14 @@ Route::post('/login', [AuthentificationController::class, 'login']);
 
 // Photos
 Route::get('/pictures', [PictureController::class, 'index']);
-Route::resource('/pictures', PictureController::class)->middleware(CreateImg::class)->except('index', 'create', 'edit');
 Route::post('/pictures/search', [PictureController::class, 'search']);
 
-// 
-Route::get('/pictures/{picture}/checklike', [PictureController::class, 'checkLike'])->middleware(CreateImg::class);
+
+Route::middleware(ApiToken::class)->group(function() {
+
+    // Photos
+    Route::resource('/pictures', PictureController::class)->except('index', 'create', 'edit');
+
+    Route::get('/pictures/{picture}/checklike', [PictureController::class, 'checkLike']);
+    Route::get('/pictures/{picture}/handlelike', [PictureController::class, 'handleLike']);
+});

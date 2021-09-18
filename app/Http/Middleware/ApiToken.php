@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class CreateImg
+class ApiToken
 {
     /**
      * Handle an incoming request.
