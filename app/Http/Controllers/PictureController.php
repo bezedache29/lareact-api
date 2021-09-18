@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Validation\PictureValidation;
-use App\Http\Validation\SearchValidation;
+use App\Models\Like;
 use App\Models\Picture;
 use Illuminate\Http\Request;
+use App\Http\Validation\SearchValidation;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Validation\PictureValidation;
 
 class PictureController extends Controller
 {
@@ -106,27 +107,18 @@ class PictureController extends Controller
         return response()->json($pictures);
     }
 
+    // Permet de check si l'article a été like par le user
     public function checkLike(Picture $picture)
     {
         // On check si le user est connecté
         if (auth()->user()) {
-            // On récupères les users ayant liké l'article
-            $likes = $picture->with('usersLiked')->get();
 
-            // On check si le user connecté a deja liké l'article
-            foreach ($likes as $like) {
-                foreach ($like->usersLiked as $userLiked) {
-                    if ($userLiked->id == auth()->user()->id) {
-                        return response()->json(true, 200);
-                    } else {
-                        return response()->json(false, 200);
-                    }
-                }
-            }
+            // On récupère le like si le user et le picture match
+            $like = Like::where('user_id', auth()->user()->id)->where('picture_id', $picture->id)->first();
+
+            // Si le like existe on return true, sinon on return false
+            return $like ? response()->json(true, 200) : response()->json(false, 200);
+
         }
-
-        return response()->json('euh');
-
-        
     }
 }
