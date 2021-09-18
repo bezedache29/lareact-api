@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Validation\PictureValidation;
+use App\Http\Validation\SearchValidation;
 use App\Models\Picture;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -90,8 +91,14 @@ class PictureController extends Controller
         //
     }
 
-    public function search(Request $request)
+    public function search(Request $request, SearchValidation $validation)
     {
+        $data = Validator::make($request->all(), $validation->rules(), $validation->messages());
+
+        if ($data->fails()) {
+            return response()->json(['errors' => $data->errors()], 401);
+        }
+
         $pictures = Picture::where('title', 'like', '%' . $request->search . '%')
                             ->orWhere('description', 'like', '%' . $request->search . '%')
                             ->get();
