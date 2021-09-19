@@ -12,6 +12,7 @@
 - Stokage d'image dans le Storage
 - whereRelation()
 - Factories / Seeders
+- Login possible avec Google (Services OAuth) : Socialite
 
 ## Lien Online
 [Lareact](https://lareact.ripley.eu)
