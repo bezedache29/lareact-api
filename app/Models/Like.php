@@ -14,14 +14,4 @@ class Like extends Model
     protected $fillable = ['picture_id', 'user_id'];
 
     protected $table = 'picture_user';
-
-    public function users()
-    {
-        return $this->hasMany(User::class);
-    }
-
-    public function pictures()
-    {
-        return $this->hasMany(Picture::class);
-    }
 }
