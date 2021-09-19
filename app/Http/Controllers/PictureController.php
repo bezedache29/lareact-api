@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Like;
+use App\Models\User;
 use App\Models\Picture;
 use Illuminate\Http\Request;
 use App\Http\Validation\SearchValidation;
@@ -150,7 +151,7 @@ class PictureController extends Controller
         return response()->json($pictures);
     }
 
-    public function SearchLikedArticles(Request $request, SearchValidation $validation)
+    public function searchLikedArticles(Request $request, SearchValidation $validation)
     {
         $data = Validator::make($request->all(), $validation->rules(), $validation->messages());
 
@@ -164,5 +165,12 @@ class PictureController extends Controller
                                 ->get();
 
         return response()->json($pictures);
+    }
+
+    public function usersLikedArticles(Picture $picture)
+    {
+        $users = User::whereRelation('liked', 'picture_id', $picture->id)->get();
+
+        return response()->json($users);
     }
 }

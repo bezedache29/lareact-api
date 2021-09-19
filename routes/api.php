@@ -31,7 +31,8 @@ Route::middleware(ApiToken::class)->group(function() {
 
     // Route lister les articles que le user a liké
     Route::get('/pictures/search-liked-articles', [PictureController::class, 'likedArticles']);
-    Route::post('/pictures/search-liked-articles', [PictureController::class, 'SearchLikedArticles']);
+    Route::post('/pictures/search-liked-articles', [PictureController::class, 'searchLikedArticles']);
+    Route::get('/pictures/{picture}/users-liked-articles', [PictureController::class, 'usersLikedArticles']);
 
     // Photos
     Route::resource('/pictures', PictureController::class)->except('index', 'create', 'edit');
